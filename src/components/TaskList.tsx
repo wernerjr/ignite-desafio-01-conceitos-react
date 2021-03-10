@@ -19,7 +19,7 @@ export function TaskList() {
     if(newTaskTitle === '')
       return;
 
-    setTasks([...tasks, {
+    setTasks(oldtasks => [...oldtasks, {
       id: Math.random(),
       title: newTaskTitle,
       isComplete: false
@@ -29,13 +29,7 @@ export function TaskList() {
   }
 
   function handleToggleTaskCompletion(id: number) {
-    const insideTasks = [...tasks];
-    const changedTask = insideTasks.find(x => x.id === id);
-    if(changedTask != undefined){
-      changedTask.isComplete = !changedTask?.isComplete;
-      setTasks(insideTasks);
-    }
-    
+    setTasks(tasks.map(task => task.id === id ? {...task, isComplete: !task.isComplete} : task));    
   }
 
   function handleRemoveTask(id: number) {
