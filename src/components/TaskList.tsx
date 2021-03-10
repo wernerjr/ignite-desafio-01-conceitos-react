@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import '../styles/tasklist.scss'
 
@@ -11,7 +11,10 @@ interface Task {
 }
 
 export function TaskList() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(() : Task[] => {
+    const localTasks = localStorage.getItem('@to.do:tasks');
+    return localTasks ? JSON.parse(localTasks) : [];
+  });
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
   function handleCreateNewTask() { 
@@ -35,6 +38,10 @@ export function TaskList() {
   function handleRemoveTask(id: number) {
     setTasks(tasks.filter(task => task.id !== id))
   }
+
+  useEffect(() => {
+    localStorage.setItem('@to.do:tasks', JSON.stringify(tasks));
+  }, [tasks])
 
   return (
     <section className="task-list container">
