@@ -1,6 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const CopyPlugin = require("copy-webpack-plugin");
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -23,6 +24,16 @@ module.exports = {
     isDevelopment && new ReactRefreshWebpackPlugin(),  
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'index.html')
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "public/*.svg",
+          to({ context, absoluteFilename }) {
+            return Promise.resolve("[name][ext]");
+          },
+        },
+      ],
     })
   ].filter(Boolean),
   module: {
